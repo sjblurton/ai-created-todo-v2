@@ -3,11 +3,13 @@ import { TodosRepository } from './todos.repository'
 
 const mockFindMany = vi.fn()
 const mockCount = vi.fn()
+const mockCreate = vi.fn()
 
 const mockPrisma = {
   todo: {
     findMany: mockFindMany,
     count: mockCount,
+    create: mockCreate,
   },
 }
 
@@ -63,6 +65,19 @@ describe('TodosRepository', () => {
       expect(result).toBe(5)
       expect(mockCount).toHaveBeenCalledWith({
         where: { userId: 'user-123', status: 'incomplete' },
+      })
+    })
+  })
+
+  describe('create', () => {
+    it('returns the created todo', async () => {
+      mockCreate.mockResolvedValue(todo)
+
+      const result = await repo.create({ userId: 'user-123', title: 'Buy milk', dueDate: null })
+
+      expect(result).toEqual(todo)
+      expect(mockCreate).toHaveBeenCalledWith({
+        data: { userId: 'user-123', title: 'Buy milk', dueDate: null, status: 'incomplete' },
       })
     })
   })

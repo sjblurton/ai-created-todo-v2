@@ -22,6 +22,12 @@ type CountParams = {
   status: TodoStatus
 }
 
+type CreateParams = {
+  userId: string
+  title: string
+  dueDate: Date | null
+}
+
 export class TodosRepository {
   constructor(private readonly db: Pick<PrismaClient, 'todo'>) {}
 
@@ -39,5 +45,12 @@ export class TodosRepository {
     return this.db.todo.count({
       where: { userId, status },
     })
+  }
+
+  async create({ userId, title, dueDate }: CreateParams): Promise<Todo> {
+    const row = await this.db.todo.create({
+      data: { userId, title, dueDate, status: 'incomplete' },
+    })
+    return { ...row, status: todoStatusSchema.parse(row.status) }
   }
 }

@@ -5,7 +5,8 @@ import type { TodosService } from '@/lib/services/todos.service'
 
 const mockService = {
   listTodos: vi.fn(),
-} satisfies Pick<TodosService, 'listTodos'>
+  createTodo: vi.fn(),
+} satisfies Pick<TodosService, 'listTodos' | 'createTodo'>
 
 const paginatedResult = {
   data: [{ id: 'todo-1', userId: 'user-123', title: 'Buy milk', dueDate: null, status: 'incomplete', createdAt: new Date() }],
@@ -75,6 +76,47 @@ describe('TodosController', () => {
       mockService.listTodos.mockRejectedValue(new Error('DB error'))
 
       const response = await controller.handleList(makeRequest(), 'user-123')
+
+      expect(response.status).toBe(500)
+    })
+  })
+
+  describe('handleCreate', () => {
+    function makePostRequest(body: unknown) {
+      return new NextRequest('http://localhost/api/v1/todos', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    it('returns 401 when userId is null', async () => {
+      const response = await controller.handleCreate(makePostRequest({ title: 'Buy milk' }), null)
+      expect(response.status).toBe(401)
+    })
+
+    it('returns 400 when title is missing', async () => {
+      const response = await controller.handleCreate(makePostRequest({}), 'user-123')
+      expect(response.status).toBe(400)
+      const body = await response.json()
+      expect(body.fieldErrors).toHaveProperty('title')
+    })
+
+    it('returns 201 with the created todo', async () => {
+      const created = { id: 'todo-1', userId: 'user-123', title: 'Buy milk', dueDate: null, status: 'incomplete', createdAt: new Date() }
+      mockService.createTodo.mockResolvedValue(created)
+
+      const response = await controller.handleCreate(makePostRequest({ title: 'Buy milk' }), 'user-123')
+
+      expect(response.status).toBe(201)
+      const body = await response.json()
+      expect(body.title).toBe('Buy milk')
+    })
+
+    it('returns 500 on unexpected error', async () => {
+      mockService.createTodo.mockRejectedValue(new Error('DB error'))
+
+      const response = await controller.handleCreate(makePostRequest({ title: 'Buy milk' }), 'user-123')
 
       expect(response.status).toBe(500)
     })

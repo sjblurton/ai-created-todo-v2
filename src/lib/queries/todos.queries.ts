@@ -27,6 +27,10 @@ export const todoKeys = {
   list: (params: ListTodosParams) => [...todoKeys.lists(), params] as const,
 }
 
+export const todoMutationKeys = {
+  create: ['todos', 'create'] as const,
+}
+
 export const todoQueries = {
   list: (params: ListTodosParams = {}) =>
     queryOptions({
