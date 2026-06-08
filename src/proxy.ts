@@ -26,7 +26,15 @@ export async function proxy(request: NextRequest) {
   )
 
   // Refresh session — do not remove this
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const { pathname } = new URL(request.url)
+  const isProtectedRoute = pathname.startsWith('/todos') || pathname.startsWith('/api/v1/todos')
+  const isAuthRoute = pathname.startsWith('/auth') || pathname.startsWith('/api/v1/auth')
+
+  if (isProtectedRoute && !isAuthRoute && !user) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
 
   return supabaseResponse
 }
