@@ -17,6 +17,10 @@ vi.mock('next/navigation', () => ({
   }),
 }))
 
+vi.mock('@/features/todos/components/TodoList', () => ({
+  TodoList: () => <div data-testid="todo-list" />,
+}))
+
 // Import after mocks are set up
 const { default: TodosPage } = await import('./page')
 

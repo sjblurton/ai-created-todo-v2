@@ -8,13 +8,24 @@ const mockUser: Pick<User, "id" | "email"> = {
   email: "test@example.com",
 };
 
+const mockTodos = [
+  {
+    id: "todo-1",
+    userId: "user-123",
+    title: "Buy milk",
+    dueDate: null,
+    status: "incomplete",
+    createdAt: "2024-01-01T00:00:00.000Z",
+  },
+];
+
 export const handlers = [
   http.get(`${BASE_URL}/api/v1/todos`, () => {
     return HttpResponse.json({
-      data: [],
+      data: mockTodos,
       page: 1,
       limit: 20,
-      total: 0,
+      total: 1,
     });
   }),
 

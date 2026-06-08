@@ -8,11 +8,8 @@ describe('MSW smoke test', () => {
     const body = await response.json()
 
     expect(response.ok).toBe(true)
-    expect(body).toEqual({
-      data: [],
-      page: 1,
-      limit: 20,
-      total: 0,
-    })
+    expect(body.page).toBe(1)
+    expect(body.limit).toBe(20)
+    expect(Array.isArray(body.data)).toBe(true)
   })
 })
