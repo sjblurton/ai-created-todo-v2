@@ -1,16 +1,22 @@
 import type { User } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/server'
+
+interface SupabaseAuthClient {
+  auth: {
+    getUser(): Promise<{ data: { user: User | null } }>
+    signOut(): Promise<{ error: { message: string } | null }>
+  }
+}
 
 export class AuthRepository {
+  constructor(private readonly client: SupabaseAuthClient) {}
+
   async getCurrentUser(): Promise<User | null> {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await this.client.auth.getUser()
     return user
   }
 
   async signOut(): Promise<void> {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.signOut()
+    const { error } = await this.client.auth.signOut()
     if (error) throw new Error(error.message)
   }
 }

@@ -1,32 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AuthRepository } from './auth.repository'
+import type { User } from '@supabase/supabase-js'
 
-const mockGetUser = vi.fn()
-const mockSignOut = vi.fn()
-
-vi.mock('@/lib/supabase/server', () => ({
-  createClient: vi.fn(() =>
-    Promise.resolve({
-      auth: {
-        getUser: mockGetUser,
-        signOut: mockSignOut,
-      },
-    })
-  ),
-}))
+const mockClient = {
+  auth: {
+    getUser: vi.fn(),
+    signOut: vi.fn(),
+  },
+}
 
 describe('AuthRepository', () => {
   let repo: AuthRepository
 
   beforeEach(() => {
     vi.clearAllMocks()
-    repo = new AuthRepository()
+    repo = new AuthRepository(mockClient)
   })
 
   describe('getCurrentUser', () => {
     it('returns the user when authenticated', async () => {
-      const user = { id: 'user-123', email: 'test@example.com' }
-      mockGetUser.mockResolvedValue({ data: { user }, error: null })
+      const user = { id: 'user-123', email: 'test@example.com' } as User
+      mockClient.auth.getUser.mockResolvedValue({ data: { user } })
 
       const result = await repo.getCurrentUser()
 
@@ -34,18 +28,7 @@ describe('AuthRepository', () => {
     })
 
     it('returns null when not authenticated', async () => {
-      mockGetUser.mockResolvedValue({ data: { user: null }, error: null })
-
-      const result = await repo.getCurrentUser()
-
-      expect(result).toBeNull()
-    })
-
-    it('returns null on error', async () => {
-      mockGetUser.mockResolvedValue({
-        data: { user: null },
-        error: new Error('Auth error'),
-      })
+      mockClient.auth.getUser.mockResolvedValue({ data: { user: null } })
 
       const result = await repo.getCurrentUser()
 
@@ -54,16 +37,16 @@ describe('AuthRepository', () => {
   })
 
   describe('signOut', () => {
-    it('calls supabase signOut', async () => {
-      mockSignOut.mockResolvedValue({ error: null })
+    it('calls client signOut', async () => {
+      mockClient.auth.signOut.mockResolvedValue({ error: null })
 
       await repo.signOut()
 
-      expect(mockSignOut).toHaveBeenCalledOnce()
+      expect(mockClient.auth.signOut).toHaveBeenCalledOnce()
     })
 
     it('throws when signOut fails', async () => {
-      mockSignOut.mockResolvedValue({ error: new Error('Sign out failed') })
+      mockClient.auth.signOut.mockResolvedValue({ error: { message: 'Sign out failed' } })
 
       await expect(repo.signOut()).rejects.toThrow('Sign out failed')
     })
