@@ -17,7 +17,7 @@ export function SignOutButton({ isLoading: controlledLoading, onLoadingChange }:
       method="POST"
       onSubmit={() => setIsLoading(true)}
     >
-      <Button type="submit" disabled={isLoading}>Sign out</Button>
+      <Button type="submit" disabled={isLoading} className="px-4 py-2">Sign out</Button>
     </form>
   )
 }
