@@ -1,9 +1,12 @@
+import type { PaginatedTodos } from '@/lib/services/todos.service'
+
 export type TodosPagePresentationProps = {
   userEmail: string
   signOutAction: () => Promise<void>
+  children?: React.ReactNode
 }
 
-export function TodosPagePresentation({ userEmail, signOutAction }: TodosPagePresentationProps) {
+export function TodosPagePresentation({ userEmail, signOutAction, children }: TodosPagePresentationProps) {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
       <header className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900">
@@ -21,8 +24,8 @@ export function TodosPagePresentation({ userEmail, signOutAction }: TodosPagePre
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center">
-        <p className="text-zinc-400 dark:text-zinc-500">Your todos will appear here.</p>
+      <main className="flex flex-1 flex-col items-center px-6 py-8">
+        {children}
       </main>
     </div>
   )
