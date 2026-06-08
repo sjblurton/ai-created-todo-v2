@@ -91,6 +91,12 @@
       "skillPath": "skills/personal/obsidian-vault/SKILL.md",
       "computedHash": "960437c7c2febc15cf9d49964f0c8bd889d90a56e81b6eaa33f3ac5b594291c3"
     },
+    "prisma-upgrade-v7": {
+      "source": "prisma/skills",
+      "sourceType": "github",
+      "skillPath": "prisma-upgrade-v7/SKILL.md",
+      "computedHash": "2e4d54a4c7a0fc2476e81686718a765f5eb2cacfb2fb0822f3109c76bf4a9bb0"
+    },
     "prototype": {
       "source": "mattpocock/skills",
       "sourceType": "github",
