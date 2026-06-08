@@ -1,0 +1,3 @@
+# Container/Presentation component split with Composition Hooks
+
+UI components are split into Presentation (pure props-in, JSX-out) and Container (hook orchestration) layers. Page files are thin route containers that call a single Composition Hook and render a Presentation Component — no substantial JSX in `page.tsx`. This makes Presentation Components trivially testable with explicit props, keeps Storybook stories simple, and prevents the anti-pattern of a single component that fetches data, mutates state, and renders a large layout. Composition Hooks are tested with real hooks and MSW; Presentation Components are unit-tested with static props.

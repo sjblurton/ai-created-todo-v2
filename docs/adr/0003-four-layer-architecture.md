@@ -1,0 +1,3 @@
+# Four-layer feature architecture with versioned API routes
+
+All API routes live under `src/app/api/v1/` and are thin HTTP adapters only. Each Route Handler delegates to a Controller in `src/features/<feature>/api/`. Controllers call Services in `src/lib/services/` for domain logic, which in turn call Repositories in `src/lib/repositories/` for all Supabase data access. This separates concerns, keeps route files free of logic, and makes each layer independently unit testable. MSW is used in component/integration tests to intercept calls to the `/api/v1/*` routes, avoiding any real Supabase dependency in tests.
