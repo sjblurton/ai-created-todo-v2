@@ -22,4 +22,16 @@ describe('SignOutButton', () => {
 
     expect(screen.getByRole('button', { name: /sign out/i })).toBeDisabled()
   })
+
+  it('is disabled when isLoading prop is true (controlled)', () => {
+    render(<SignOutButton isLoading={true} onLoadingChange={() => {}} />)
+
+    expect(screen.getByRole('button', { name: /sign out/i })).toBeDisabled()
+  })
+
+  it('is not disabled when isLoading prop is false (controlled)', () => {
+    render(<SignOutButton isLoading={false} onLoadingChange={() => {}} />)
+
+    expect(screen.getByRole('button', { name: /sign out/i })).not.toBeDisabled()
+  })
 })

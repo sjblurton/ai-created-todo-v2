@@ -1,10 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useControllableState } from '../../../lib/hooks/useControllableState'
 import { Button } from '../../../components/Button'
 
-export function SignOutButton() {
-  const [isLoading, setIsLoading] = useState(false)
+type SignOutButtonProps = {
+  isLoading?: boolean
+  onLoadingChange?: (loading: boolean) => void
+}
+
+export function SignOutButton({ isLoading: controlledLoading, onLoadingChange }: SignOutButtonProps = {}) {
+  const [isLoading, setIsLoading] = useControllableState(false, controlledLoading, onLoadingChange)
 
   return (
     <form
