@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { signOut } from '@/features/todos/actions/signOut'
 import { TodosPagePresentation } from '@/features/todos/components/TodosPagePresentation'
 import { TodoList } from '@/features/todos/components/TodoList'
 
@@ -15,7 +14,6 @@ export default async function TodosPage() {
   return (
     <TodosPagePresentation
       userEmail={user.email ?? ''}
-      signOutAction={signOut}
     >
       <TodoList />
     </TodosPagePresentation>

@@ -1,42 +1,25 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { TodosPagePresentation } from './TodosPagePresentation'
 
 describe('TodosPagePresentation', () => {
   it('renders the user email', () => {
-    render(
-      <TodosPagePresentation
-        userEmail="test@example.com"
-        signOutAction={vi.fn()}
-      />
-    )
+    render(<TodosPagePresentation userEmail="test@example.com" />)
 
     expect(screen.getByText('test@example.com')).toBeInTheDocument()
   })
 
   it('renders a sign out button', () => {
-    render(
-      <TodosPagePresentation
-        userEmail="test@example.com"
-        signOutAction={vi.fn()}
-      />
-    )
+    render(<TodosPagePresentation userEmail="test@example.com" />)
 
     expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument()
   })
 
-  it('calls signOutAction when sign out is submitted', async () => {
-    const signOutAction = vi.fn()
-    render(
-      <TodosPagePresentation
-        userEmail="test@example.com"
-        signOutAction={signOutAction}
-      />
-    )
+  it('sign out form posts to the REST sign-out endpoint', () => {
+    render(<TodosPagePresentation userEmail="test@example.com" />)
 
-    await userEvent.click(screen.getByRole('button', { name: /sign out/i }))
-
-    expect(signOutAction).toHaveBeenCalledOnce()
+    const form = screen.getByRole('button', { name: /sign out/i }).closest('form')
+    expect(form).toHaveAttribute('action', '/api/v1/auth/signout')
+    expect(form).toHaveAttribute('method', 'POST')
   })
 })
