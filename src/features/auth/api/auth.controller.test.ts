@@ -48,18 +48,19 @@ describe('AuthController', () => {
   })
 
   describe('handleSignOut', () => {
-    it('returns 200 after successful sign out', async () => {
+    it('redirects to sign-in after successful sign out', async () => {
       mockService.signOut.mockResolvedValue(undefined)
 
-      const response = await controller.handleSignOut()
+      const response = await controller.handleSignOut('http://localhost:3000/')
 
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(307)
+      expect(response.headers.get('location')).toBe('http://localhost:3000/')
     })
 
     it('returns 500 when sign out fails', async () => {
       mockService.signOut.mockRejectedValue(new Error('Failed'))
 
-      const response = await controller.handleSignOut()
+      const response = await controller.handleSignOut('http://localhost:3000/')
 
       expect(response.status).toBe(500)
     })

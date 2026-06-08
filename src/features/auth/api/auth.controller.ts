@@ -16,10 +16,10 @@ export class AuthController {
     }
   }
 
-  async handleSignOut(): Promise<NextResponse> {
+  async handleSignOut(redirectTo: string): Promise<NextResponse> {
     try {
       await this.service.signOut()
-      return NextResponse.json({ success: true }, { status: 200 })
+      return NextResponse.redirect(redirectTo)
     } catch {
       return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
