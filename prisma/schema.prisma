@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Todo {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @db.Uuid
   userId    String    @map("user_id") @db.Uuid
   title     String
   dueDate   DateTime? @map("due_date") @db.Date

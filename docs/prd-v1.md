@@ -68,7 +68,7 @@ A web app where the user logs in once via an OAuth provider (Google or GitHub) a
   ```
   todos
     id         uuid  primary key  default gen_random_uuid()
-    user_id    uuid  references auth.users  not null
+  user_id    uuid  not null  -- matches Supabase auth.uid(), no FK constraint (separate systems)
     title      text  not null
     due_date   date  (nullable)
     status     text  not null  default 'incomplete'  -- 'incomplete' | 'complete'
