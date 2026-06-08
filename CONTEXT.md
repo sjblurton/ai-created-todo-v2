@@ -35,7 +35,7 @@ Contains reusable domain logic shared across controllers. Lives in `src/lib/serv
 _Avoid_: Helper, util, manager
 
 **Repository**:
-Contains all data-access logic for a domain. Lives in `src/lib/repositories/<domain>.repository.ts`. The only layer that talks to Supabase.
+Contains all data-access logic for a domain. Lives in `src/lib/repositories/<domain>.repository.ts`. The only layer that talks to the database — via Prisma (`PrismaClient`). Supabase Auth is the one exception: session reads happen via the Supabase server client, not Prisma.
 _Avoid_: Data layer, store, DAO
 
 **Presentation Component**:

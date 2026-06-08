@@ -36,6 +36,7 @@ A web app where the user logs in once via an OAuth provider (Google or GitHub) a
 - **Framework:** Next.js 16 (App Router) with TypeScript and Tailwind CSS.
 - **Backend:** Supabase — Postgres database, Auth, and Row Level Security.
 - **API keys:** Supabase new key format (`sb_publishable_...` for client-side, `sb_secret_...` for server-side). Legacy `anon`/`service_role` keys are not used. See `docs/adr/0001-supabase-new-api-keys.md`.
+- **ORM:** Prisma. All database queries go through `PrismaClient` in the Repository layer. Supabase hosts the Postgres database and Auth; Prisma owns all data access. Schema is defined in `prisma/schema.prisma`; migrations live in `prisma/migrations/`. See `docs/adr/0005-prisma-for-data-access.md`.
 - **Auth:** OAuth only (Google and/or GitHub) via Supabase Auth. The app has a `/auth/callback` route that exchanges the OAuth code for a session. Session is refreshed on every request via Next.js middleware.
 - **Architecture:** Four-layer, feature-based. Route Handlers are thin HTTP adapters that delegate to Controllers. Controllers orchestrate Service calls. Services contain domain logic. Repositories handle all Supabase data access. See the `api-versioned-routes` skill for the full spec.
   ```
@@ -73,7 +74,8 @@ A web app where the user logs in once via an OAuth provider (Google or GitHub) a
     status     text  not null  default 'incomplete'  -- 'incomplete' | 'complete'
     created_at timestamptz  default now()
   ```
-- **Row Level Security:** Users can only select, insert, update, and delete rows where `user_id = auth.uid()`.
+  Defined in `prisma/schema.prisma`. Apply with `npx prisma migrate dev` (local) or `npx prisma migrate deploy` (CI).
+- **Row Level Security:** RLS policies remain on the Supabase schema as a safety net, but user isolation is enforced at the application layer — every Repository query filters by the authenticated User's ID. See `docs/adr/0005-prisma-for-data-access.md`.
 - **Default sort:** `created_at` ascending (oldest first).
 - **Component architecture:** Container/Presentation split throughout. Page files are thin route containers that call one Composition Hook and render a Presentation Component. Presentation Components are pure — they receive all data and callbacks via props and have no data-fetching hooks. Containers/Composition Hooks own hook calls and view-model assembly.
   ```
