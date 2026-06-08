@@ -1,8 +1,9 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { PaginatedTodos } from '@/lib/services/todos.service'
+import type { TodoStatus } from '@/lib/schemas/todo.schema'
 
 type ListTodosParams = {
-  status?: string
+  status?: TodoStatus
   page?: number
   limit?: number
 }

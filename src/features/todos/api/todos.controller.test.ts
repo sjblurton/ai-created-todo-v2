@@ -54,6 +54,13 @@ describe('TodosController', () => {
       )
     })
 
+    it('returns 400 when status is not a valid TodoStatus', async () => {
+      const response = await controller.handleList(makeRequest({ status: 'done' }), 'user-123')
+      expect(response.status).toBe(400)
+      const body = await response.json()
+      expect(body.error).toMatch(/invalid status/i)
+    })
+
     it('defaults to status=incomplete when not specified', async () => {
       mockService.listTodos.mockResolvedValue(paginatedResult)
 
