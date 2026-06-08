@@ -14,7 +14,8 @@ const todo = {
 const mockRepo = {
   findMany: vi.fn(),
   count: vi.fn(),
-} satisfies Pick<TodosRepository, 'findMany' | 'count'>
+  create: vi.fn(),
+} satisfies Pick<TodosRepository, 'findMany' | 'count' | 'create'>
 
 describe('TodosService', () => {
   let service: TodosService
@@ -55,5 +56,14 @@ describe('TodosService', () => {
       page: 1,
       limit: 20,
     })
+  })
+
+  it('createTodo returns the created todo', async () => {
+    mockRepo.create.mockResolvedValue(todo)
+
+    const result = await service.createTodo({ userId: 'user-123', title: 'Buy milk', dueDate: null })
+
+    expect(result).toEqual(todo)
+    expect(mockRepo.create).toHaveBeenCalledWith({ userId: 'user-123', title: 'Buy milk', dueDate: null })
   })
 })

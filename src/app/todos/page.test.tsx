@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const mockGetUser = vi.fn()
 const mockRedirect = vi.fn()
@@ -11,6 +12,7 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 vi.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
   redirect: vi.fn((url: string) => {
     mockRedirect(url)
     throw new Error(`NEXT_REDIRECT:${url}`)
@@ -24,6 +26,11 @@ vi.mock('@/features/todos/components/TodoList', () => ({
 // Import after mocks are set up
 const { default: TodosPage } = await import('./page')
 
+function wrapper({ children }: { children: React.ReactNode }) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
+
 describe('TodosPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -35,7 +42,7 @@ describe('TodosPage', () => {
     })
 
     const page = await TodosPage()
-    render(page)
+    render(page, { wrapper })
 
     expect(screen.getByText('test@example.com')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument()
