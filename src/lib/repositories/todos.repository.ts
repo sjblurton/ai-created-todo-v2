@@ -34,7 +34,7 @@ export class TodosRepository {
   async findMany({ userId, status, page, limit }: FindManyParams): Promise<Todo[]> {
     const rows = await this.db.todo.findMany({
       where: { userId, status },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
     })

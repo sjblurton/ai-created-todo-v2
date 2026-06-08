@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +12,6 @@ import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
 
 export function CreateTodoForm() {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useMutation({
@@ -26,7 +24,6 @@ export function CreateTodoForm() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: todoKeys.all });
-      router.refresh();
     },
   });
 
@@ -41,12 +38,22 @@ export function CreateTodoForm() {
   });
 
   async function onSubmit(data: CreateTodoInput) {
-    await mutateAsync(data);
+    const res = await mutateAsync(data);
+
+    if (!res.ok) {
+      console.error("Failed to create todo", res.status, await res.text());
+      return;
+    }
+
     reset();
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full max-w-xl mb-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="w-full max-w-xl mb-6"
+    >
       <div className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-start">
         <div className="flex-1">
           <Field
@@ -60,17 +67,21 @@ export function CreateTodoForm() {
           />
         </div>
 
-          <Field
-            id="due_date"
-            label="Due date"
-            type="date"
-            error={errors.due_date?.message}
-            className="text-zinc-500 dark:text-zinc-400"
-            {...register("due_date")}
-          />
+        <Field
+          id="due_date"
+          label="Due date"
+          type="date"
+          error={errors.due_date?.message}
+          className="text-zinc-500 dark:text-zinc-400"
+          {...register("due_date")}
+        />
 
-        <Button type="submit" disabled={isPending} className="shrink-0 px-4 py-2">
-          {isPending ? 'Adding…' : 'Add todo'}
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="shrink-0 px-4 py-2"
+        >
+          {isPending ? "Adding…" : "Add todo"}
         </Button>
       </div>
     </form>
