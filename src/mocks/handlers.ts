@@ -1,8 +1,7 @@
 import { http, HttpResponse } from 'msw'
 
-// MSW v2 in Node (Vitest) requires absolute URLs — relative paths are not resolved.
-// Use http://localhost to match app fetches in the jsdom environment.
-const BASE_URL = 'http://localhost'
+// MSW v2 in Node (Vitest/jsdom) requires absolute URLs — relative paths are not resolved.
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 export const handlers = [
   http.get(`${BASE_URL}/api/v1/todos`, () => {
