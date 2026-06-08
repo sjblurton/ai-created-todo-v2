@@ -1,4 +1,5 @@
 import type { Todo, TodosRepository } from '@/lib/repositories/todos.repository'
+import type { TodoStatus } from '@/lib/schemas/todo.schema'
 
 export type PaginatedTodos = {
   data: Todo[]
@@ -9,7 +10,7 @@ export type PaginatedTodos = {
 
 type ListTodosParams = {
   userId: string
-  status?: string
+  status?: TodoStatus
   page?: number
   limit?: number
 }
