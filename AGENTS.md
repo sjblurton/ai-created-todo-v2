@@ -16,3 +16,5 @@ Follow the red-green-refactor loop:
 3. **REFACTOR** — clean up, then repeat
 
 Do not write implementation files speculatively and fill in tests afterwards. If you catch yourself creating a source file before a test file, stop and delete it.
+
+Invoke the `tdd` skill at the start of any task that involves writing new code — it contains detailed guidance on test design, mocking boundaries, and interface design.
