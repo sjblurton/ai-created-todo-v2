@@ -73,6 +73,12 @@
       "skillPath": "skills/misc/migrate-to-shoehorn/SKILL.md",
       "computedHash": "8f1a623a019abca0ab5e22e8deaae375829368cc1344016010201cf650331d33"
     },
+    "msw": {
+      "source": "anivar/msw-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "96d03c7e53ed1b19499a611e728592df40aa60f8093c8adbc58a928b9a2477a6"
+    },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
       "sourceType": "github",
