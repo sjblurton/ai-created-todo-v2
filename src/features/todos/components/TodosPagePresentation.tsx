@@ -1,4 +1,5 @@
 import type { PaginatedTodos } from '@/lib/services/todos.service'
+import { SignOutButton } from './SignOutButton'
 
 export type TodosPagePresentationProps = {
   userEmail: string
@@ -12,14 +13,7 @@ export function TodosPagePresentation({ userEmail, children }: TodosPagePresenta
         <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">My Todos</h1>
         <div className="flex items-center gap-4">
           <span className="text-sm text-zinc-500 dark:text-zinc-400">{userEmail}</span>
-          <form action="/api/v1/auth/signout" method="POST">
-            <button
-              type="submit"
-              className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-            >
-              Sign out
-            </button>
-          </form>
+          <SignOutButton />
         </div>
       </header>
 
