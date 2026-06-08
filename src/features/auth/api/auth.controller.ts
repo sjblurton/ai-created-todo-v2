@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import type { AuthService } from '@/lib/services/auth.service'
+import type { AuthRepository } from '@/lib/repositories/auth.repository'
 
 export class AuthController {
-  constructor(private readonly service: Pick<AuthService, 'getCurrentUser' | 'signOut'>) {}
+  constructor(private readonly repo: Pick<AuthRepository, 'getCurrentUser' | 'signOut'>) {}
 
   async handleGetMe(): Promise<NextResponse> {
     try {
-      const user = await this.service.getCurrentUser()
+      const user = await this.repo.getCurrentUser()
       if (!user) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
       }
@@ -18,7 +18,7 @@ export class AuthController {
 
   async handleSignOut(redirectTo: string): Promise<NextResponse> {
     try {
-      await this.service.signOut()
+      await this.repo.signOut()
       return NextResponse.redirect(redirectTo)
     } catch {
       return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
